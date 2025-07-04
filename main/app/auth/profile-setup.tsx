@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import {
   Image,
   Pressable,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -18,18 +19,10 @@ interface ProfileForm {
   username: string;
   age: string;
   profileImage: string;
-  bannerImage: string;
   pronouns: string;
   language: string;
   interests: string;
   plan: "free" | "premium";
-  socialLinks: {
-    twitter: string;
-    instagram: string;
-    facebook: string;
-    linkedin: string;
-    website: string;
-  };
 }
 
 const ProfileSetup = () => {
@@ -41,18 +34,10 @@ const ProfileSetup = () => {
     username: "",
     age: "",
     profileImage: "",
-    bannerImage: "",
     pronouns: "",
     language: "en",
     interests: "",
     plan: "free",
-    socialLinks: {
-      twitter: "",
-      instagram: "",
-      facebook: "",
-      linkedin: "",
-      website: "",
-    },
   });
   const [feedback, setFeedback] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -68,7 +53,7 @@ const ProfileSetup = () => {
       const imageUri = `data:image/jpeg;base64,${result.assets[0].base64}`;
       setForm({
         ...form,
-        [type === "profile" ? "profileImage" : "bannerImage"]: imageUri,
+        profileImage: imageUri,
       });
     }
   };
@@ -102,18 +87,8 @@ const ProfileSetup = () => {
       username: form.username.trim(),
       age: ageNumber,
       profileImage: form.profileImage,
-      bannerImage: form.bannerImage,
       pronouns: form.pronouns,
       language: form.language,
-      interests: form.interests
-        .split(",")
-        .map((i) => i.trim())
-        .filter(Boolean),
-      socialLinks: form.socialLinks,
-      onlineStatus: true,
-      isVerified: false,
-      friends: [],
-      bondCount: 0,
       plan: form.plan,
     };
 
@@ -141,21 +116,6 @@ const ProfileSetup = () => {
           )}
         </TouchableOpacity>
         <Text className="text-xs text-gray-500 mt-1">Profile Picture</Text>
-
-        {/* Banner Image */}
-        <TouchableOpacity onPress={() => pickImage("banner")} className="mt-4">
-          {form.bannerImage ? (
-            <Image
-              source={{ uri: form.bannerImage }}
-              className="w-full h-20 rounded-lg"
-            />
-          ) : (
-            <View className="w-full h-20 bg-gray-200 rounded-lg items-center justify-center">
-              <Entypo name="image" size={26} color="gray" />
-            </View>
-          )}
-        </TouchableOpacity>
-        <Text className="text-xs text-gray-500 mt-1">Banner Image</Text>
       </View>
 
       {/* Text Inputs */}
@@ -187,11 +147,6 @@ const ProfileSetup = () => {
             field: "language",
             placeholder: "e.g., en, hi",
           },
-          {
-            label: "Your interests",
-            field: "interests",
-            placeholder: "e.g., coding, music",
-          },
         ].map(({ label, field, placeholder, keyboardType }) => (
           <View key={field} className="mb-3">
             <Text className="text-[14px] text-[#523c72]">{label}</Text>
@@ -204,31 +159,12 @@ const ProfileSetup = () => {
             />
           </View>
         ))}
-
-        {/* Social Links */}
-        <Text className="text-[14px] text-[#523c72] mt-3">Social Links</Text>
-        {["twitter", "instagram", "facebook", "linkedin", "website"].map(
-          (key) => (
-            <TextInput
-              key={key}
-              placeholder={`Your ${key}`}
-              value={form.socialLinks[key as keyof typeof form.socialLinks]}
-              onChangeText={(text) =>
-                setForm({
-                  ...form,
-                  socialLinks: { ...form.socialLinks, [key]: text },
-                })
-              }
-              className="border-b border-[#523c72] text-[#523c72] mb-3 w-full text-lg"
-            />
-          )
-        )}
       </View>
     </View>
   );
 
   return (
-    <View className="w-full bg-gray-500 rounded-3xl overflow-hidden p-4 max-w-md">
+    <ScrollView className="w-full bg-gray-500 rounded-3xl overflow-hidden p-4 max-w-md">
       {renderInputs()}
       {feedback && (
         <Text className="text-center text-[#312170] mt-2">{feedback}</Text>
@@ -256,7 +192,7 @@ const ProfileSetup = () => {
           </Text>
         </Pressable>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
