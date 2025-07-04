@@ -8,24 +8,11 @@ export const saveUserProfile = async (profileData: {
   plan: "free" | "premium";
   age?: number;
   profileImage?: string;
-  bannerImage?: string;
   pronouns?: string;
   gender?: string;
   location?: string;
   language?: string;
   bio?: string;
-  onlineStatus?: boolean;
-  isVerified?: boolean;
-  interests?: string[];
-  socialLinks?: {
-    twitter?: string;
-    instagram?: string;
-    facebook?: string;
-    linkedin?: string;
-    website?: string;
-  };
-  friends?: string[];
-  bondCount?: number;
 }) => {
   try {
     const currentUser = auth.currentUser;
